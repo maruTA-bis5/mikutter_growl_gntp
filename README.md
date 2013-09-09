@@ -13,8 +13,8 @@ mikutterの通知をGrowlにGNTP(Growl Notification Transport Protocol)を用い
 依存関係
 --------
 
-# ruby_gntpが必要です。gem install ruby_gntp
-# settings, uitranslatorプラグインに依存します。
+- ruby_gntpが必要です。gem install ruby_gntp
+- settings, uitranslatorプラグインに依存します。
 
 作者について
 ------------
