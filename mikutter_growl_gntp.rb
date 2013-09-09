@@ -71,6 +71,7 @@ Plugin.create(:mikutter_growl_gntp) do
         self.notify_sound(UserConfig[:notify_sound_direct_message]) end end end
 
   def self.notify(user, text)
+    text = text.to_show if text.is_a? Message
     GNTP.notify({
       :app_name => UserConfig[:growl_appname],
       :title => "@#{user[:idname]} (#{user[:name]})",
