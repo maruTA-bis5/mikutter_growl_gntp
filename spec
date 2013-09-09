@@ -5,7 +5,8 @@ depends:
   plugin:
   - settings
   - uitranslator
-version: '1.0'
+  - notify
+version: '1.0.1'
 author: maruTA_bis5
 name: mikutter growl gntp
 description: Show mikutter notifications via growl using gntp
