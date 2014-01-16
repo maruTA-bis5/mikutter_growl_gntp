@@ -2,6 +2,25 @@
 require "rubygems"
 require "ruby_gntp"
 
+class Plugin::Settings::Listener
+  def self.[](symbol)
+    return symbol if(symbol.is_a? Plugin::Settings::Listener)
+    if symbol == :growl_password || symbol == :growl_appname
+      Plugin::Settings::Listener.new(
+        :get => lambda{ UserConfig[symbol] },
+        :set => lambda{ |val|
+          UserConfig[symbol] = val
+          Plugin[:mikutter_growl_gntp].gntp_init
+        }
+      )
+    else
+      Plugin::Settings::Listener.new(
+        :get => lambda{ UserConfig[symbol] },
+        :set => lambda{ |val| UserConfig[symbol] = val }
+      )
+    end
+  end
+end
 Plugin.create(:mikutter_growl_gntp) do
 
   settings("growl") do
