@@ -110,7 +110,7 @@ Plugin.create(:mikutter_growl_gntp) do
   end
       
   def notify(user, text, type)
-    init if @growl.nil?
+    gntp_init if @growl.nil?
     text = text.to_show if text.is_a? Message
     @growl.notify({
       :name => type,
