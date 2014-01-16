@@ -23,10 +23,11 @@ class Plugin::Settings::Listener
 end
 Plugin.create(:mikutter_growl_gntp) do
 
-  settings("growl") do
-    input "Growl通知に利用するアプリケーション名", :growl_appname
-    if UserConfig[:growl_appname].nil? or UserConfig[:growl_appname] == ""
-      UserConfig[:growl_appname] = "mikutter" end
+  settings("Growl") do
+    settings("Growl通知設定") do
+      input "Growl通知に利用するアプリケーション名", :growl_appname
+      inputpass "パスワード", :growl_password
+    end
   end
 
   onupdate do |post, raw_messages|
