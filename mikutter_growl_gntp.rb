@@ -30,6 +30,9 @@ Plugin.create(:mikutter_growl_gntp) do
     end
   end
 
+  if UserConfig[:growl_appname].nil? or UserConfig[:growl_appname] == ""
+    UserConfig[:growl_appname] = "mikutter" end
+
   onupdate do |post, raw_messages|
     messages = Plugin.filtering(:show_filter, raw_messages.select{ |m| not(m.from_me? or m.to_me?) and m[:created] > DEFINED_TIME }).first
     if not(messages.empty?)
