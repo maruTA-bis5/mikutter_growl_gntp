@@ -79,30 +79,34 @@ Plugin.create(:mikutter_growl_gntp) do
         newer_dms.each{ |dm|
           notify(User.generate(dm[:sender]), dm[:text], "direct_messages") } end end end
 
-  def init() 
-    @growl = GNTP.new UserConfig[:growl_appname]
-    @growl.register({:notifications => [{
-      :name  => "update",
-      :enabled => true,
-    }, {
-      :name => "mention",
-      :enabled => true,
-    }, {
-      :name => "followers_created",
-      :enabled => true,
-    }, {
-      :name => "followers_destroy",
-      :enabled => true,
-    }, {
-      :name => "favorite",
-      :enabled => true,
-    }, {
-      :name => "retweeted",
-      :enabled => true,
-    }, {
-      :name => "direct_messages",
-      :enabled => true,
-    }]})
+  def gntp_init
+    @growl = GNTP.new UserConfig[:growl_appname], "localhost", UserConfig[:growl_password]
+    begin 
+      @growl.register({:notifications => [{
+        :name  => "update",
+        :enabled => true,
+      }, {
+        :name => "mention",
+        :enabled => true,
+      }, {
+        :name => "followers_created",
+        :enabled => true,
+      }, {
+        :name => "followers_destroy",
+        :enabled => true,
+      }, {
+        :name => "favorite",
+        :enabled => true,
+      }, {
+        :name => "retweeted",
+        :enabled => true,
+      }, {
+        :name => "direct_messages",
+        :enabled => true,
+      }]})
+    rescue => e
+      notice e.class
+    end
   end
       
   def notify(user, text, type)
