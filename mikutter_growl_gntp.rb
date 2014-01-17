@@ -5,7 +5,7 @@ require "ruby_gntp"
 class Plugin::Settings::Listener
   def self.[](symbol)
     return symbol if(symbol.is_a? Plugin::Settings::Listener)
-    if symbol == :growl_password || symbol == :growl_appname
+    if symbol == :growl_password || symbol == :growl_appname || symbol == :growl_target || symbol == :growl_port
       Plugin::Settings::Listener.new(
         :get => lambda{ UserConfig[symbol] },
         :set => lambda{ |val|
@@ -24,14 +24,18 @@ end
 Plugin.create(:mikutter_growl_gntp) do
 
   settings("Growl") do
-    settings("Growl通知設定") do
+    settings("Growl通知設定 - 「通知」の設定を忘れずに！") do
       input "Growl通知に利用するアプリケーション名", :growl_appname
+      input "通知先ホスト（自ホストならlocalhost）", :growl_target
       inputpass "パスワード", :growl_password
+      adjustment "通知先ポート（デフォルト：23053）", :growl_port, 0, 65535
     end
   end
 
-  if UserConfig[:growl_appname].nil? or UserConfig[:growl_appname] == ""
-    UserConfig[:growl_appname] = "mikutter" end
+  UserConfig[:growl_appname] = "mikutter" if UserConfig[:growl_appname].nil?
+  UserConfig[:growl_target] = "localhost" if UserConfig[:growl_target].nil?
+  UserConfig[:growl_port] = 23053 if UserConfig[:growl_port].nil?
+  UserConfig[:growl_password] = "" if UserConfig[:growl_password].nil?
 
   onupdate do |post, raw_messages|
     messages = Plugin.filtering(:show_filter, raw_messages.select{ |m| not(m.from_me? or m.to_me?) and m[:created] > DEFINED_TIME }).first
@@ -80,7 +84,11 @@ Plugin.create(:mikutter_growl_gntp) do
           notify(User.generate(dm[:sender]), dm[:text], "direct_messages") } end end end
 
   def gntp_init
-    @growl = GNTP.new UserConfig[:growl_appname], "localhost", UserConfig[:growl_password]
+    appname = UserConfig[:growl_appname] 
+    host = UserConfig[:growl_target] 
+    pass = UserConfig[:growl_password] 
+    port = UserConfig[:growl_port]
+    @growl = GNTP.new appname, host, pass, port
     begin 
       @growl.register({:notifications => [{
         :name  => "update",
