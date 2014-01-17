@@ -5,7 +5,7 @@ require "ruby_gntp"
 class Plugin::Settings::Listener
   def self.[](symbol)
     return symbol if(symbol.is_a? Plugin::Settings::Listener)
-    if symbol == :growl_password || symbol == :growl_appname
+    if symbol == :growl_password || symbol == :growl_appname || symbol == :growl_target || symbol == :growl_port
       Plugin::Settings::Listener.new(
         :get => lambda{ UserConfig[symbol] },
         :set => lambda{ |val|
@@ -84,7 +84,11 @@ Plugin.create(:mikutter_growl_gntp) do
           notify(User.generate(dm[:sender]), dm[:text], "direct_messages") } end end end
 
   def gntp_init
-    @growl = GNTP.new UserConfig[:growl_appname], "localhost", UserConfig[:growl_password]
+    appname = UserConfig[:growl_appname] 
+    host = UserConfig[:growl_target] 
+    pass = UserConfig[:growl_password] 
+    port = UserConfig[:growl_port]
+    @growl = GNTP.new appname, host, pass, port
     begin 
       @growl.register({:notifications => [{
         :name  => "update",
