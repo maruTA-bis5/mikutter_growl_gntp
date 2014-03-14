@@ -4,7 +4,6 @@ depends:
   mikutter: 0.2.2
   plugin:
   - settings
-  - uitranslator
   - notify
 version: '1.1'
 author: maruTA_bis5
