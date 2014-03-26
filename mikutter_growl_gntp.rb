@@ -120,11 +120,14 @@ Plugin.create(:mikutter_growl_gntp) do
   def notify(user, text, type)
     gntp_init if @growl.nil?
     text = text.to_show if text.is_a? Message
-    @growl.notify({
-      :name => type,
-      :title => "@#{user[:idname]} (#{user[:name]})",
-      :text => text,
-      :icon => "file://"+Gdk::WebImageLoader.local_path(user[:profile_image_url]),
-    })
+    begin
+      @growl.notify({
+        :name => type,
+        :title => "@#{user[:idname]} (#{user[:name]})",
+        :text => text,
+        :icon => "file://"+Gdk::WebImageLoader.local_path(user[:profile_image_url]),
+      })
+    rescue e
+    end
   end
 end
