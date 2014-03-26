@@ -127,7 +127,6 @@ Plugin.create(:mikutter_growl_gntp) do
         :text => text,
         :icon => "file://"+Gdk::WebImageLoader.local_path(user[:profile_image_url]),
       })
-    rescue e
     end
   end
 end
