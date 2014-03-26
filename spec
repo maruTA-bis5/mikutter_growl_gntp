@@ -5,7 +5,7 @@ depends:
   plugin:
   - settings
   - notify
-version: '1.1'
+version: '1.1.a'
 author: maruTA_bis5
 name: mikutter growl gntp
 description: Show mikutter notifications via growl using gntp
