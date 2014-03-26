@@ -55,17 +55,17 @@ Plugin.create(:mikutter_growl_gntp) do
     if not(users.empty?)
       if(UserConfig[:notify_followed])
         users.each{ |user|
-          notify(users.first, _('%{users} にフォローされました。') % {users: users.map{|u| "@#{u[:idname]}" }.join(' ')}, "followers_created") } end end end
+          notify(users.first, __('%{users} にフォローされました。') % {users: users.map{|u| "@#{u[:idname]}" }.join(' ')}, "followers_created") } end end end
 
   on_followers_destroy do |post, users|
     if not(users.empty?)
       if(UserConfig[:notify_removed])
-        self.notify(users.first, _('%{users} にリムーブされました。') % {users: users.map{|u| "@#{u[:idname]}" }.join(' ')}, "followers_destroy") end end end
+        self.notify(users.first, __('%{users} にリムーブされました。') % {users: users.map{|u| "@#{u[:idname]}" }.join(' ')}, "followers_destroy") end end end
 
   on_favorite do |service, by, to|
     if to.from_me?
       if(UserConfig[:notify_favorited])
-        notify(by, _("fav by %{from_user} \"%{tweet}\"") % {
+        notify(by, __("fav by %{from_user} \"%{tweet}\"") % {
                       from_user: by[:idname],
                       tweet: to.to_s }, "favorite") end end end
 
@@ -74,7 +74,7 @@ Plugin.create(:mikutter_growl_gntp) do
     if not(messages.empty?)
       if(UserConfig[:notify_retweeted])
         messages.each{ |message|
-          notify(message[:user], _('ReTweet: %{tweet}') % {tweet: message.to_s}, "retweeted") } end end end
+          notify(message[:user], __('ReTweet: %{tweet}') % {tweet: message.to_s}, "retweeted") } end end end
 
   on_direct_messages do |post, dms|
     newer_dms = dms.select{ |dm| Time.parse(dm[:created_at]) > DEFINED_TIME }
@@ -127,6 +127,14 @@ Plugin.create(:mikutter_growl_gntp) do
         :text => text,
         :icon => "file://"+Gdk::WebImageLoader.local_path(user[:profile_image_url]),
       })
+    end
+  end
+
+  def __(txt) 
+    if defined? _
+      _(txt)
+    else
+      txt
     end
   end
 end
