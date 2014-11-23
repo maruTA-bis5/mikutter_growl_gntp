@@ -21,9 +21,10 @@ mikutterの通知をGrowlにGNTP(Growl Notification Transport Protocol)を用い
 --------
 
 - ruby_gntpが必要です。`gem install ruby_gntp`または`bundle install`でインストールしてください。
-- settings, uitranslator, notifyプラグインに依存します。
+- settings, notifyプラグインに依存します。
 
-作者について
-------------
+問い合わせ
+----------
 
-「Windows上でmikutterを動かすておくれ」ことmaruTA(Twitter: @maruTA_bis5)
+- Twitter http://twitter.com/maruTA_bis5
+- Github @bis5

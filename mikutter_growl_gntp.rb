@@ -38,14 +38,14 @@ Plugin.create(:mikutter_growl_gntp) do
   UserConfig[:growl_password] = "" if UserConfig[:growl_password].nil?
 
   onupdate do |post, raw_messages|
-    messages = Plugin.filtering(:show_filter, raw_messages.select{ |m| not(m.from_me? or m.to_me?) and m[:created] > DEFINED_TIME }).first
+    messages = Plugin.filtering(:show_filter, raw_messages.select{ |m| not(m.from_me? or m.to_me?) and m[:created] > defined_time }).first
     if not(messages.empty?)
       if(UserConfig[:notify_friend_timeline])
         messages.each{ |message|
           notify(message[:user], message, "update") if not message.from_me? } end end end
 
   onmention do |post, raw_messages|
-    messages = Plugin.filtering(:show_filter, raw_messages.select{ |m| not(m.from_me? or m[:retweet]) and m[:created] > DEFINED_TIME }).first
+    messages = Plugin.filtering(:show_filter, raw_messages.select{ |m| not(m.from_me? or m[:retweet]) and m[:created] > defined_time }).first
     if not(messages.empty?)
       if(not(UserConfig[:notify_friend_timeline]) and UserConfig[:notify_mention])
         messages.each{ |message|
@@ -77,7 +77,7 @@ Plugin.create(:mikutter_growl_gntp) do
           notify(message[:user], __('ReTweet: %{tweet}') % {tweet: message.to_s}, "retweeted") } end end end
 
   on_direct_messages do |post, dms|
-    newer_dms = dms.select{ |dm| Time.parse(dm[:created_at]) > DEFINED_TIME }
+    newer_dms = dms.select{ |dm| Time.parse(dm[:created_at]) > defined_time }
     if not(newer_dms.empty?)
       if(UserConfig[:notify_direct_message])
         newer_dms.each{ |dm|
@@ -118,15 +118,16 @@ Plugin.create(:mikutter_growl_gntp) do
   end
       
   def notify(user, text, type)
-    gntp_init if @growl.nil?
-    text = text.to_show if text.is_a? Message
-    begin
+	begin
+      gntp_init if @growl.nil?
+      text = text.to_show if text.is_a? Message
       @growl.notify({
         :name => type,
         :title => "@#{user[:idname]} (#{user[:name]})",
         :text => text,
         :icon => "file://"+Gdk::WebImageLoader.local_path(user[:profile_image_url]),
       })
+    rescue RuntimeError
     end
   end
 
